@@ -28,7 +28,7 @@ class MasterApplication: Application() {
 
             // 로그인 유무 확인
             if(checkIsLogin()){
-                // token이 있다면 let 블럭을 함, let을 할 경우 받은 token을 저장함
+                // token이 있다면 let 블럭을 함, let을 할 경우 받은 token을 저장함(블럭의 결과값을 리턴함)
                 getUserToken()?.let{token ->
                     val request = original.newBuilder()
                             .header("Authorization", "token " + token)
@@ -74,4 +74,6 @@ class MasterApplication: Application() {
         if(token == "null") return null // null이면 null을 내보내고
         else return token // 아니면 token을 내보냄
     }
+
+
 }

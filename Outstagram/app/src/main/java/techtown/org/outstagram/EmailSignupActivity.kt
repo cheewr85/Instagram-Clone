@@ -27,10 +27,16 @@ class EmailSignupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_email_signup)
-
-        initView(this@EmailSignupActivity) // 켜자마자 첫 화면으로 나오고 해당 View들과 상호작용을 해서 넘어갔을 경우 처리를 하기 위해서 onCreate에 바로 시작해서 선언
-        setupListener(this)
+        // 로그인이 되어 있으면 바로 POSTList 액티비티로 넘어가게 함, MasterApplication에 있는 함수를 통해서 로그인 확인함
+        if((application as MasterApplication).checkIsLogin()){
+            // POSTList로 넘어가게끔 인텐트 처리함
+            finish() // 시작은 런처 액티비티로 시작하니깐 로그인이 확인됐다면 런처 액티비티는 볼 필요가 없으니 종료시키고 바로 넘어감
+            startActivity(Intent(this, OutStagramPostListActivity::class.java))
+        } else { // 로그인이 되어 있지 않다면 현재 액티비티를 그려주고 회원가입 혹은 로그인 하게끔 처리를 함
+            setContentView(R.layout.activity_email_signup)
+            initView(this@EmailSignupActivity) // 켜자마자 첫 화면으로 나오고 해당 View들과 상호작용을 해서 넘어갔을 경우 처리를 하기 위해서 onCreate에 바로 시작해서 선언
+            setupListener(this)
+        }
     }
 
     // lateinit을 통해서 초기화를 늦춤, 이를 통해 이 함수에서 초기화할 수 있음
@@ -91,6 +97,9 @@ class EmailSignupActivity : AppCompatActivity() {
                     saveUserToken(token, activity) // 그리고 받은 token과 현재 activity를 넘겨줌
                     // sharedPreference에 token 값이 없을 것이므로 다시 호출해서 header에 붙을 수 있게끔 설정을 별도로 함
                     (application as MasterApplication).createRetrofit()
+                    activity.startActivity(
+                        Intent(activity, OutStagramPostListActivity::class.java)
+                    )
                 }
             }
 

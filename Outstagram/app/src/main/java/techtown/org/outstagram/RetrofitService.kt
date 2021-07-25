@@ -1,10 +1,9 @@
 package techtown.org.outstagram
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RetrofitService {
     // 인터페이스는 사용할 HTTP CRUD 동작을 정의해 놓는 것임
@@ -19,11 +18,11 @@ interface RetrofitService {
 //    // 그리고 그대로 이 객체가 CallBack으로 받음
 
     @POST("user/signup/")
-    @FormUrlEncoded // form-urlencoded : 키-값 방식, &(구분자) 사용, Key-Value&Key-Value
+    @FormUrlEncoded // form-urlencoded : 키-값 방식, &(구분자) 사용, Key-Value & Key-Value
     fun register(
-            @Field("username")username : String,
-            @Field("password1")password1 : String,
-            @Field("password2")password2 : String
+        @Field("username")username : String,
+        @Field("password1")password1 : String,
+        @Field("password2")password2 : String
     ): Call<User>
 
     // POST 방식으로 key-value로 동일하게 넘김, signup과 유사한 방식임
@@ -31,7 +30,26 @@ interface RetrofitService {
     @POST("user/login/")
     @FormUrlEncoded
     fun login(
-            @Field("username")username : String,
-            @Field("password")password : String
+        @Field("username")username : String,
+        @Field("password")password : String
     ):Call<User>
+
+
+    // GET 방식으로 해당 JSON 데이터를 다 받아옴
+    // JSON으로 받을 데이터를 Post 객체로 넘겨서 받음
+    // 해당 객체를 ArrayList에 담아서 Post 리스트로 쭉 받아서 나오게 함, 그러기 위한 함수
+    @GET("instagram/post/list/all/")
+    fun getAllPosts():Call<ArrayList<Post>>
+
+    // 사진을 업로드하기 위한 API
+    @Multipart // 파트가 여러개임을 나타냄
+    @POST("instagram/post/")
+    fun uploadPost(
+        // 이미지와 글을 올릴 것이므로 아래와 같이 설정해서 함
+        @Part image : MultipartBody.Part,
+        @Part ("content")requestBody : RequestBody
+    ):Call<Post> // Post에서 Content와 Image를 다루기 때문에 결과값으로 해당 객체를 받음
+
+    @GET("post/list/")
+    fun getUserPostList():Call<ArrayList<Post>>
 }

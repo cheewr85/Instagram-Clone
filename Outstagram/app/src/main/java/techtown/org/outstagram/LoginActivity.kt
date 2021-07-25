@@ -44,6 +44,9 @@ class LoginActivity : AppCompatActivity() {
                         saveUserToken(token, this@LoginActivity) // 현재 Activity에 token 값을 저장해줌(sharedPreference로)
                         (application as MasterApplication).createRetrofit() // header에 token을 추가해줘야 하기 때문에 Retrofit 사용
                         Toast.makeText(this@LoginActivity, "로그인 하셨습니다", Toast.LENGTH_LONG).show()
+                        startActivity(
+                            Intent(this@LoginActivity, OutStagramPostListActivity::class.java)
+                        )
                     }
 
                 }
